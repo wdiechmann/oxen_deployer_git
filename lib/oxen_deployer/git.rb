@@ -1,7 +1,7 @@
 class OxenDeployer::Git
 
   # Duh.
-  VERSION = "1.0.2"
+  VERSION = "1.0.3"
 
   set :source,  OxenDeployer::Git.new
   set :git_cmd, "git"
@@ -31,7 +31,8 @@ class OxenDeployer::Git
         "cd #{destination}",
         "#{git_cmd} init",
         "#{git_cmd} remote add -t #{revision} -f origin #{repository}",
-        "#{git_cmd} checkout -f -b deployed-#{revision} #{revision}",
+        "#{git_cmd} checkout #{revision}",
+        "#{git_cmd} checkout -b deployed-#{revision}",
         submodule_cmd,
         "cd -"
       ].join(" && ")
