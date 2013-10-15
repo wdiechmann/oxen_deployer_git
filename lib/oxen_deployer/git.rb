@@ -27,12 +27,23 @@ class OxenDeployer::Git
       ].join(" && ")
     else
       [ "rm -rf #{destination}",
-        "#{git_cmd} clone #{repository} #{destination}",
+        "mkdir -p #{destination}",
         "cd #{destination}",
-        "#{git_cmd} checkout -f -b deployed-#{revision} #{revision}",
+        "git init",
+        "git remote add -t #{revision} -f origin #{repository}",
+        "git checkout #{revision}",
         submodule_cmd,
         "cd -"
       ].join(" && ")
+      # 
+      # 
+      # [ "rm -rf #{destination}",
+      #   "#{git_cmd} clone #{repository} #{destination}",
+      #   "cd #{destination}",
+      #   "#{git_cmd} checkout -f -b deployed-#{revision} #{revision}",
+      #   submodule_cmd,
+      #   "cd -"
+      # ].join(" && ")
     end
   end
 
