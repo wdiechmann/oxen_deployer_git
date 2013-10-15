@@ -1,7 +1,7 @@
 class OxenDeployer::Git
 
   # Duh.
-  VERSION = "1.0.0"
+  VERSION = "1.0.1"
 
   set :source,  OxenDeployer::Git.new
   set :git_cmd, "git"
