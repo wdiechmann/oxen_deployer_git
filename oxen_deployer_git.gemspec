@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = 'oxen_deployer_git'
-  s.version = "1.0.1"
+  s.version = "1.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Walther Diechmann"]
-  s.date = %q{2013-07-18}
+  s.date = %q{2013-10-15}
   s.description = %q{OxenDeployer plugin for Git support. Just another pitty rip-off off the Vlad-Git plugin}
   s.authors     = ["Walther Diechmann", "Enrique Phillips"]
   s.email       = ['walther@diechmann.net', 'enrique.phillips.wac@gmail.com']
