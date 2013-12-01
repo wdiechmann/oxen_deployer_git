@@ -1,7 +1,7 @@
 class OxenDeployer::Git
 
   # Duh.
-  VERSION = "1.0.3"
+  VERSION = "1.0.5"
 
   set :source,  OxenDeployer::Git.new
   set :git_cmd, "git"
@@ -17,14 +17,24 @@ class OxenDeployer::Git
 
     if fast_checkout_applicable?(revision, destination)
       [ "cd #{destination}",
-        "#{git_cmd} checkout -q origin",
+        "#{git_cmd} checkout #{revision}",
         "#{git_cmd} fetch",
         "#{git_cmd} reset --hard #{new_revision}",
         submodule_cmd,
-        "#{git_cmd} branch -f deployed-#{revision} #{revision}",
+        "#{git_cmd} branch -D deployed-#{revision}",
+        "#{git_cmd} branch deployed-#{revision} #{revision}",
         "#{git_cmd} checkout deployed-#{revision}",
         "cd -"
       ].join(" && ")
+      # [ "cd #{destination}",
+      #   "#{git_cmd} checkout -q origin",
+      #   "#{git_cmd} fetch",
+      #   "#{git_cmd} reset --hard #{new_revision}",
+      #   submodule_cmd,
+      #   "#{git_cmd} branch -f deployed-#{revision} #{revision}",
+      #   "#{git_cmd} checkout deployed-#{revision}",
+      #   "cd -"
+      # ].join(" && ")
     else
       [ "rm -rf #{destination}",
         "mkdir -p #{destination}",
@@ -32,6 +42,7 @@ class OxenDeployer::Git
         "#{git_cmd} init",
         "#{git_cmd} remote add -t #{revision} -f origin #{repository}",
         "#{git_cmd} checkout #{revision}",
+        "#{git_cmd} branch -D deployed-#{revision}",
         "#{git_cmd} checkout -b deployed-#{revision}",
         submodule_cmd,
         "cd -"
