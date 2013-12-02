@@ -1,7 +1,7 @@
 class OxenDeployer::Git
 
   # Duh.
-  VERSION = "1.0.5"
+  VERSION = "1.0.6"
 
   set :source,  OxenDeployer::Git.new
   set :git_cmd, "git"
@@ -14,49 +14,56 @@ class OxenDeployer::Git
     destination = File.join(destination, 'repo')
     revision = 'HEAD' if revision =~ /head/i
     new_revision = ('HEAD' == revision) ? "origin" : revision
-
-    if fast_checkout_applicable?(revision, destination)
-      [ "cd #{destination}",
-        "#{git_cmd} checkout #{revision}",
-        "#{git_cmd} fetch",
-        "#{git_cmd} reset --hard #{new_revision}",
-        submodule_cmd,
-        "#{git_cmd} branch -D deployed-#{revision}",
-        "#{git_cmd} branch deployed-#{revision} #{revision}",
-        "#{git_cmd} checkout deployed-#{revision}",
-        "cd -"
-      ].join(" && ")
-      # [ "cd #{destination}",
-      #   "#{git_cmd} checkout -q origin",
-      #   "#{git_cmd} fetch",
-      #   "#{git_cmd} reset --hard #{new_revision}",
-      #   submodule_cmd,
-      #   "#{git_cmd} branch -f deployed-#{revision} #{revision}",
-      #   "#{git_cmd} checkout deployed-#{revision}",
-      #   "cd -"
-      # ].join(" && ")
-    else
-      [ "rm -rf #{destination}",
-        "mkdir -p #{destination}",
-        "cd #{destination}",
-        "#{git_cmd} init",
-        "#{git_cmd} remote add -t #{revision} -f origin #{repository}",
-        "#{git_cmd} checkout #{revision}",
-        "#{git_cmd} branch -D deployed-#{revision}",
-        "#{git_cmd} checkout -b deployed-#{revision}",
-        submodule_cmd,
-        "cd -"
-      ].join(" && ")
-      # 
-      # 
-      # [ "rm -rf #{destination}",
-      #   "#{git_cmd} clone #{repository} #{destination}",
-      #   "cd #{destination}",
-      #   "#{git_cmd} checkout -f -b deployed-#{revision} #{revision}",
-      #   submodule_cmd,
-      #   "cd -"
-      # ].join(" && ")
-    end
+    
+    [ "#{git_cmd} checkout #{revision}",
+      "#{git_cmd} branch -D deployed-#{revision}",
+      "#{git_cmd} pull",
+      "#{git_cmd} branch deployed-#{revision} #{revision}",
+      "#{git_cmd} checkout deployed-#{revision}",
+      "cd -"
+    ].join( " && ")
+    # if fast_checkout_applicable?(revision, destination)
+    #   [ "cd #{destination}",
+    #     "#{git_cmd} checkout #{revision}",
+    #     "#{git_cmd} fetch",
+    #     "#{git_cmd} reset --hard #{new_revision}",
+    #     submodule_cmd,
+    #     "#{git_cmd} branch -D deployed-#{revision}",
+    #     "#{git_cmd} branch deployed-#{revision} #{revision}",
+    #     "#{git_cmd} checkout deployed-#{revision}",
+    #     "cd -"
+    #   ].join(" && ")
+    #   # [ "cd #{destination}",
+    #   #   "#{git_cmd} checkout -q origin",
+    #   #   "#{git_cmd} fetch",
+    #   #   "#{git_cmd} reset --hard #{new_revision}",
+    #   #   submodule_cmd,
+    #   #   "#{git_cmd} branch -f deployed-#{revision} #{revision}",
+    #   #   "#{git_cmd} checkout deployed-#{revision}",
+    #   #   "cd -"
+    #   # ].join(" && ")
+    # else
+    #   [ "rm -rf #{destination}",
+    #     "mkdir -p #{destination}",
+    #     "cd #{destination}",
+    #     "#{git_cmd} init",
+    #     "#{git_cmd} remote add -t #{revision} -f origin #{repository}",
+    #     "#{git_cmd} checkout #{revision}",
+    #     "#{git_cmd} branch -D deployed-#{revision}",
+    #     "#{git_cmd} checkout -b deployed-#{revision}",
+    #     submodule_cmd,
+    #     "cd -"
+    #   ].join(" && ")
+    #   # 
+    #   # 
+    #   # [ "rm -rf #{destination}",
+    #   #   "#{git_cmd} clone #{repository} #{destination}",
+    #   #   "cd #{destination}",
+    #   #   "#{git_cmd} checkout -f -b deployed-#{revision} #{revision}",
+    #   #   submodule_cmd,
+    #   #   "cd -"
+    #   # ].join(" && ")
+    # end
   end
 
   # Returns the command that will export +revision+ from the current
