@@ -1,7 +1,7 @@
 class OxenDeployer::Git
 
   # Duh.
-  VERSION = "1.0.6"
+  VERSION = "1.0.7"
 
   set :source,  OxenDeployer::Git.new
   set :git_cmd, "git"
@@ -15,7 +15,8 @@ class OxenDeployer::Git
     revision = 'HEAD' if revision =~ /head/i
     new_revision = ('HEAD' == revision) ? "origin" : revision
     
-    [ "#{git_cmd} checkout #{revision}",
+    [ "cd #{destination}",
+      "#{git_cmd} checkout #{revision}",
       "#{git_cmd} branch -D deployed-#{revision}",
       "#{git_cmd} pull",
       "#{git_cmd} branch deployed-#{revision} #{revision}",
