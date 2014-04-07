@@ -17,7 +17,7 @@ class OxenDeployer::Git
     
     [ "cd #{destination}",
       "#{git_cmd} checkout #{revision}",
-      "#{git_cmd} branch -D deployed-#{revision}",
+      "(#{git_cmd} branch -D deployed-#{revision} 2>/dev/null || true)",
       "#{git_cmd} pull",
       "#{git_cmd} branch deployed-#{revision} #{revision}",
       "#{git_cmd} checkout deployed-#{revision}",
